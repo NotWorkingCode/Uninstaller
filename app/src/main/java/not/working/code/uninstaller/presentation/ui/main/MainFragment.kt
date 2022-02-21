@@ -5,6 +5,11 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import not.working.code.uninstaller.R
 import not.working.code.uninstaller.databinding.FragmentMainBinding
 import not.working.code.uninstaller.presentation.base.BaseFragment
@@ -19,12 +24,14 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
 
     private val deleteLauncher = registerForActivityResult(DeleteAppContract()) {
         viewModel.loadInstalledApp()
+        showAD()
     }
 
     private lateinit var adapter: MainAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        MobileAds.initialize(view.context)
         configureRecyclerView()
         observeViewModel()
         viewModel.loadInstalledApp()
@@ -56,6 +63,18 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         viewModel.installedApp.observe(viewLifecycleOwner) { apps ->
             adapter.refresh(apps)
         }
+    }
+
+    private fun showAD() {
+        val ADRequest = AdRequest.Builder().build()
+        InterstitialAd.load(activity,"ca-app-pub-4878763915270030/4963426766", ADRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                interstitialAd.show(activity)
+            }
+        })
     }
 
     override fun builder(): FragmentToolbar {

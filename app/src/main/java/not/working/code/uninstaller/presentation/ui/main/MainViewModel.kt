@@ -5,6 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -46,9 +50,11 @@ class MainViewModel(
     }
 
     fun deleteApp(deleteLauncher: ActivityResultLauncher<String?>) {
-        viewModelScope.launch {
-            deleteAppUseCase(getSelectedApps(), deleteLauncher)
-        }
+        val apps = getSelectedApps()
+        if(apps.isNotEmpty())
+            viewModelScope.launch {
+                deleteAppUseCase(getSelectedApps(), deleteLauncher)
+            }
     }
 
     private fun getSelectedApps(): List<AppInfo> {
@@ -59,5 +65,6 @@ class MainViewModel(
         }
         return apps
     }
+
 
 }
