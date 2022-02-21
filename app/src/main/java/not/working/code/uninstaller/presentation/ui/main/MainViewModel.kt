@@ -1,18 +1,23 @@
 package not.working.code.uninstaller.presentation.ui.main
 
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import not.working.code.uninstaller.domain.DeleteAppUseCase
 import not.working.code.uninstaller.domain.GetInstalledAppUseCase
 import not.working.code.uninstaller.model.AppInfo
 import not.working.code.uninstaller.utils.mutation
 
 class MainViewModel(
-    private val getInstalledAppUseCase: GetInstalledAppUseCase
+    private val getInstalledAppUseCase: GetInstalledAppUseCase,
+    private val deleteAppUseCase: DeleteAppUseCase
 ) : ViewModel() {
 
     private val _installedApp: MutableLiveData<List<AppInfo>> = MutableLiveData()
@@ -38,6 +43,21 @@ class MainViewModel(
                 appInfo.isSelected = !appInfo.isSelected
             }
         }
+    }
+
+    fun deleteApp(deleteLauncher: ActivityResultLauncher<String?>) {
+        viewModelScope.launch {
+            deleteAppUseCase(getSelectedApps(), deleteLauncher)
+        }
+    }
+
+    private fun getSelectedApps(): List<AppInfo> {
+        val apps = ArrayList<AppInfo>()
+        installedApp.value?.forEach {
+            if (it.isSelected)
+                apps.add(it)
+        }
+        return apps
     }
 
 }

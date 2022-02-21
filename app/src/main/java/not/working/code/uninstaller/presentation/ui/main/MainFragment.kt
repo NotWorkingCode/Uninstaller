@@ -1,6 +1,7 @@
 package not.working.code.uninstaller.presentation.ui.main
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -8,12 +9,17 @@ import not.working.code.uninstaller.R
 import not.working.code.uninstaller.databinding.FragmentMainBinding
 import not.working.code.uninstaller.presentation.base.BaseFragment
 import not.working.code.uninstaller.presentation.fragment_toolbar.FragmentToolbar
+import not.working.code.uninstaller.utils.DeleteAppContract
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : BaseFragment(R.layout.fragment_main) {
 
     private val binding: FragmentMainBinding by viewBinding()
     private val viewModel: MainViewModel by viewModel()
+
+    private val deleteLauncher = registerForActivityResult(DeleteAppContract()) {
+        viewModel.loadInstalledApp()
+    }
 
     private lateinit var adapter: MainAdapter
 
@@ -39,11 +45,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
 
     private fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.mainProgress.visibility =
-                if(isLoading)
-                    View.VISIBLE
-                else
-                    View.GONE
+            if(isLoading) {
+                binding.mainRecycler.visibility = View.GONE
+                binding.mainProgress.visibility = View.VISIBLE
+            } else {
+                binding.mainRecycler.visibility = View.VISIBLE
+                binding.mainProgress.visibility = View.GONE
+            }
         }
         viewModel.installedApp.observe(viewLifecycleOwner) { apps ->
             adapter.refresh(apps)
@@ -54,6 +62,16 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         return  FragmentToolbar.Builder()
             .withId(binding.mainToolbar.id)
             .withTitle(getString(R.string.app_name))
+            .withMenu(R.menu.menu_main_toolbar)
+            .withMenuItems(
+                mutableListOf(
+                    R.id.menu_main_toolbar_delete
+                ),
+                mutableListOf(MenuItem.OnMenuItemClickListener {
+                    viewModel.deleteApp(deleteLauncher)
+                    true
+                })
+            )
             .build()
     }
 
