@@ -1,18 +1,13 @@
 package not.working.code.uninstaller.presentation.ui.main
 
-import android.content.pm.ApplicationInfo
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import not.working.code.uninstaller.R
 import not.working.code.uninstaller.databinding.ItemAppBinding
 import not.working.code.uninstaller.model.AppInfo
 
-class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+class MainAdapter(private val onClick: (position: Int) -> Unit) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     private val data = ArrayList<AppInfo>()
 
@@ -23,11 +18,18 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     }
 
     inner class MainViewHolder(private val binding: ItemAppBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(appInfo: AppInfo) {
-            binding.apply {
-                itemAppTitle.text = appInfo.name
-                itemAppPackage.text = appInfo.packageName
-                itemAppImage.setImageDrawable(appInfo.icon)
+        fun bind(appInfo: AppInfo) = with(binding){
+            itemAppTitle.text = appInfo.name
+            itemAppPackage.text = appInfo.packageName
+            itemAppImage.setImageDrawable(appInfo.icon)
+            root.setCardBackgroundColor(
+                if (appInfo.isSelected)
+                    root.context.getColor(R.color.accent)
+                else
+                    root.context.getColor(R.color.white)
+            )
+            root.setOnClickListener {
+                onClick.invoke(absoluteAdapterPosition)
             }
         }
     }

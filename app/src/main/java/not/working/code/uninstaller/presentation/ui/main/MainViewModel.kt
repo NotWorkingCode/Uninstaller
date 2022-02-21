@@ -1,6 +1,5 @@
 package not.working.code.uninstaller.presentation.ui.main
 
-import android.content.pm.ApplicationInfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import not.working.code.uninstaller.domain.GetInstalledAppUseCase
 import not.working.code.uninstaller.model.AppInfo
+import not.working.code.uninstaller.utils.mutation
 
 class MainViewModel(
     private val getInstalledAppUseCase: GetInstalledAppUseCase
@@ -28,6 +28,14 @@ class MainViewModel(
             withContext(Dispatchers.Main) {
                 _installedApp.value = apps
                 _isLoading.value = false
+            }
+        }
+    }
+
+    fun selectItem(position: Int) {
+        _installedApp.mutation {
+            it.value?.get(position)?.let { appInfo ->
+                appInfo.isSelected = !appInfo.isSelected
             }
         }
     }

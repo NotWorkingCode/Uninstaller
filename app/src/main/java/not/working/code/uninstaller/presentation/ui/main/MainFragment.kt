@@ -24,8 +24,14 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         viewModel.loadInstalledApp()
     }
 
+    private fun getConfigureAdapter(): MainAdapter {
+        return MainAdapter { selectedItemPosition ->
+            viewModel.selectItem(selectedItemPosition)
+        }
+    }
+
     private fun configureRecyclerView() {
-        adapter = MainAdapter()
+        adapter = getConfigureAdapter()
 
         binding.mainRecycler.layoutManager = LinearLayoutManager(activity)
         binding.mainRecycler.adapter = adapter

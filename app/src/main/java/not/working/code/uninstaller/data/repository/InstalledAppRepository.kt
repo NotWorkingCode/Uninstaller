@@ -24,7 +24,8 @@ interface InstalledAppRepository {
                 AppInfo(
                     name = it.loadLabel(context.packageManager).toString(),
                     packageName = it.packageName,
-                    icon = context.packageManager.getApplicationIcon(it)
+                    icon = context.packageManager.getApplicationIcon(it),
+                    isSelected = false
                 )
             }
         }
