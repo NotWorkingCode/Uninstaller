@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main.recycler.item.height">70dp</dimen>
+    <dimen name="main.recycler.item.margin">13dp</dimen>
+    <dimen name="main.recycler.item.radius">4dp</dimen>
+    <dimen name="main.recycler.item.padding">13dp</dimen>
+    <dimen name="main.recycler.item.image.size">60dp</dimen>
+</resources>

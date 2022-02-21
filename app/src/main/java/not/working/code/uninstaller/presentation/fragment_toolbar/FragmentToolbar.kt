@@ -7,7 +7,7 @@ import androidx.annotation.MenuRes
 
 class FragmentToolbar(
     @IdRes val resId: Int,
-    val title: String,
+    val title: String?,
     @MenuRes val menuId: Int,
     val menuItems: MutableList<Int>,
     val menuClicks: MutableList<MenuItem.OnMenuItemClickListener?>

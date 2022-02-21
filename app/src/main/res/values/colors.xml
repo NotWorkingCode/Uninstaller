@@ -6,6 +6,4 @@
     <color name="primary">#FF8C9EFF</color>
     <color name="primaryDark">#FF5870CB</color>
     <color name="accent">#FFC0CFFF</color>
-
-    <color name="textOnPrimary">#FFFFEBEE</color>
 </resources>

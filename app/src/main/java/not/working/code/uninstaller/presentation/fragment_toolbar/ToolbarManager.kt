@@ -3,6 +3,7 @@ package not.working.code.uninstaller.presentation.fragment_toolbar
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
 
 class ToolbarManager constructor(
     private var builder: FragmentToolbar,
@@ -11,9 +12,9 @@ class ToolbarManager constructor(
 
     fun prepareToolbar() {
         if (builder.resId != FragmentToolbar.NO_TOOLBAR) {
-            val fragmentToolbar = container.findViewById(builder.resId) as Toolbar
+            val fragmentToolbar = container.findViewById(builder.resId) as MaterialToolbar
 
-            if (builder.title != "") {
+            if (builder.title != null) {
                 fragmentToolbar.title = builder.title
             }
 
